@@ -23,6 +23,7 @@ INC / Lynx
 LockBit 3.0  
 LokiLocker / BlackBit  
 Magniber  
+Makop  
 Mallox  
 Maze  
 MedusaLocker  
