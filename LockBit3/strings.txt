@@ -25,6 +25,9 @@ appdata
 application data
 google
 mozilla
+temp
+lib
+xampp
 autorun.inf
 boot.ini
 bootfont.bin
@@ -43,8 +46,14 @@ storepwd.ini
 12.exe
 twelve.exe
 shadow.exe
+shadow.jpg
+screen.jpg
+blackjack.png
 comet.exe
 ds.exe
+mordor.exe
+blackjack.exe
+bj.exe
 386
 adv
 ani
@@ -97,4 +106,11 @@ hta
 msi
 pdb
 search-ms
+cnf
+cmtx
+xml
+inf
+ini
+readme
 WS2019
+DC-01
