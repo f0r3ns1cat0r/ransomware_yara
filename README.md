@@ -45,3 +45,4 @@ Trinity
 Unibovwood  
 VoidCrypt  
 Zeppelin (Buran)  
+Zhirinovsky  
