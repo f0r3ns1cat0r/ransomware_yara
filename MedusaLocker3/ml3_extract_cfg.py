@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2023 Andrey Zhdanov (rivitna)
+# Copyright (c) 2023-2025 Andrey Zhdanov (rivitna)
 # https://github.com/rivitna
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -30,21 +30,36 @@ import struct
 CONFIG_RES_TYPE = 'SETTINGS'
 CONFIG_RES_NAME = 101
 CONFIG_RES_ID = 0
-KEY_N1 = 24835043114418836
-KEY_N2 = 45081017281842116
+
+KEYS = [
+    ( 24835043114418836, 45081017281842116),
+    ( 49004104848533, 1981043465524)
+]
+
+CFG_CHECK_STR = b'FileExtension'
+
+
+def xor_decrypt(data: bytes, key: bytes) -> bytes:
+    """Decrypt (XOR)"""
+
+    res_data = bytearray(data)
+    for i in range(len(data)):
+        res_data[i] ^= key[i % len(key)]
+    return bytes(res_data)
 
 
 def decrypt_cfg_data(data: bytes) -> bytes:
     """Decrypt configuration data"""
 
-    key_n = KEY_N1 * KEY_N2
-    key_size = (key_n.bit_length() + 7) // 8
-    key = key_n.to_bytes(key_size, byteorder='little')
-    res_data = bytearray(data)
+    for key_n1, key_n2 in KEYS:
+        key_n = key_n1 * key_n2
+        key_size = (key_n.bit_length() + 7) // 8
+        key = key_n.to_bytes(key_size, byteorder='little')
+        dec_data = xor_decrypt(data, key)
+        if dec_data.find(CFG_CHECK_STR) > 0:
+            return dec_data
 
-    for i in range(len(data)):
-        res_data[i] ^= key[i % key_size]
-    return bytes(res_data)
+    return None
 
 
 def find_res_entry(res_name, file_data: bytes, res_pos: int,
@@ -182,6 +197,9 @@ if not enc_cfg_data:
 
 # Decrypt configuration data
 cfg_data = decrypt_cfg_data(enc_cfg_data)
+if not cfg_data:
+    print('Error: Invalid configuration data.')
+    sys.exit(1)
 
 new_filename = filename + '.cfg'
 with io.open(new_filename, 'wb') as f:
