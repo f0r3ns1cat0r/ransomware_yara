@@ -36,7 +36,7 @@ KEYS = [
     ( 49004104848533, 1981043465524)
 ]
 
-CFG_CHECK_STR = b'FileExtension'
+CFG_CHECK_STR = b'ncryptedFileExtension'
 
 
 def xor_decrypt(data: bytes, key: bytes) -> bytes:
