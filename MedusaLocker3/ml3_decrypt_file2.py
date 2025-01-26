@@ -84,7 +84,7 @@ def decrypt_file(filename: str, priv_key: RSA.RsaKey,
         else:
             s_priv_key = priv_key
 
-        # Decrypt AES key
+        # Decrypt ChaCha20 key
         enc_key_data = footer[ENC_SESSION_RSA_KEY_SIZE :
                               ENC_SESSION_RSA_KEY_SIZE + RSA_KEY_SIZE]
         key_data = ml3_crypt.rsa_decrypt(enc_key_data, s_priv_key)
