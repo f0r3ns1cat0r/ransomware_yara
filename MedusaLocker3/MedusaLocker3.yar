@@ -13,8 +13,8 @@ rule MedusaLocker3
         score = 100
 
     strings:
-        $s0 = { 50 55 54 49 4E 48 55 49 4C 4F 31 33 33 37 00 }
-        $s1 = { 44 4F 4E 41 4C 44 54 52 55 4D 50 00 }
+        $s0 = { 50 55 54 49 4E }
+        $s1 = { 54 52 55 4D 50 }
         $s2 = "\x00SETTINGS\x00" wide
         $s3 = "hiperDrives\x00" ascii
         $s4 = "ncryptedFileExtension\x00" ascii
