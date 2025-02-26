@@ -25,6 +25,7 @@
 import sys
 import io
 import struct
+from Crypto.Cipher import ChaCha20
 
 
 CONFIG_RES_TYPE = 'SETTINGS'
@@ -36,7 +37,34 @@ KEYS = [
     ( 49004104848533, 1981043465524 )
 ]
 
+CHACHA_KEY_N1 = 612
+CHACHA_KEY_N2 = 563553629
+CHACHA_NONCE_N1 = 2920816
+CHACHA_NONCE_N2 = 30969971
+
+CHACHA_KEY_SIZE = 32
+CHACHA_NONCE_SIZE = 8
+
 CFG_CHECK_STR = b'ncryptedFileExtension'
+
+
+def make_key_data(n1: int, n2: int, length: int = 0) -> bytes:
+    """Make key data"""
+
+    n = n1 * n2
+    size = (n.bit_length() + 7) // 8
+    s = n.to_bytes(size, byteorder='little')
+    if length <= 0:
+        return s
+
+    key_data = b''
+    while len(key_data) < length:
+        rem_len = length - len(key_data)
+        if rem_len < len(s):
+            key_data += s[:rem_len]
+        else:
+            key_data += s
+    return key_data
 
 
 def xor_decrypt(data: bytes, key: bytes) -> bytes:
@@ -48,16 +76,23 @@ def xor_decrypt(data: bytes, key: bytes) -> bytes:
     return bytes(res_data)
 
 
-def decrypt_cfg_data(data: bytes) -> bytes:
+def decrypt_cfg_data(data: bytes) -> bytes | None:
     """Decrypt configuration data"""
 
+    # Decrypt (XOR)
     for key_n1, key_n2 in KEYS:
-        key_n = key_n1 * key_n2
-        key_size = (key_n.bit_length() + 7) // 8
-        key = key_n.to_bytes(key_size, byteorder='little')
+        key = make_key_data(key_n1, key_n2)
         dec_data = xor_decrypt(data, key)
         if dec_data.find(CFG_CHECK_STR) > 0:
             return dec_data
+
+    # Decrypt (ChaCha20)
+    key = make_key_data(CHACHA_KEY_N1, CHACHA_KEY_N2, CHACHA_KEY_SIZE)
+    nonce = make_key_data(CHACHA_NONCE_N1, CHACHA_NONCE_N2, CHACHA_NONCE_SIZE)
+    cipher = ChaCha20.new(key=key, nonce=nonce)
+    dec_data = cipher.decrypt(data)
+    if dec_data.find(CFG_CHECK_STR) > 0:
+        return dec_data
 
     return None
 
