@@ -59,11 +59,7 @@ def make_key_data(n1: int, n2: int, length: int = 0) -> bytes:
 
     key_data = b''
     while len(key_data) < length:
-        rem_len = length - len(key_data)
-        if rem_len < len(s):
-            key_data += s[:rem_len]
-        else:
-            key_data += s
+        key_data += s[:min(len(s), length - len(key_data))]
     return key_data
 
 
@@ -83,7 +79,7 @@ def decrypt_cfg_data(data: bytes) -> bytes | None:
     for key_n1, key_n2 in KEYS:
         key = make_key_data(key_n1, key_n2)
         dec_data = xor_decrypt(data, key)
-        if dec_data.find(CFG_CHECK_STR) > 0:
+        if CFG_CHECK_STR in dec_data:
             return dec_data
 
     # Decrypt (ChaCha20)
@@ -91,7 +87,7 @@ def decrypt_cfg_data(data: bytes) -> bytes | None:
     nonce = make_key_data(CHACHA_NONCE_N1, CHACHA_NONCE_N2, CHACHA_NONCE_SIZE)
     cipher = ChaCha20.new(key=key, nonce=nonce)
     dec_data = cipher.decrypt(data)
-    if dec_data.find(CFG_CHECK_STR) > 0:
+    if CFG_CHECK_STR in dec_data:
         return dec_data
 
     return None
