@@ -13,6 +13,7 @@ DarkBit
 DeadBolt  
 Dharma  
 Enmity  
+GarrantyDecrypt  
 GlobeImposter / NewBomani  
 GoodMorning / SD  
 HardBit  
@@ -45,4 +46,3 @@ Trinity
 Unibovwood  
 VoidCrypt  
 Zeppelin (Buran)  
-Zhirinovsky  
