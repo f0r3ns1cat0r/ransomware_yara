@@ -50,7 +50,7 @@ RANSOM_EXTS = [
     '.jackNik',
     '.Key2030',
     '.Louis',
-    '.Lucas', 
+    '.Lucas',
     '.RealBer',
     '.SnowM',
     '.Thomas',
