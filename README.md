@@ -37,7 +37,8 @@ Proxima / BTC-azadi / Cylance / BlackShadow / Lambda
 Qilin  
 RCRU64  
 REvil  
-SafePay  
+SafePay
+Sezar7
 Sojusz  
 STOP/Djvu  
 SunCrypt  
